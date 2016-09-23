@@ -11,6 +11,7 @@ xmlsec1 implementation was used as preparation step for templates.
 Prerequisites
 Follwoing command need to be available
 * xmlsec1
+* xsltproc
 * php (command line - php-cli)
 * openssl
 * xxd
