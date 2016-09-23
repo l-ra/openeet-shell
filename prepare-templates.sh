@@ -1,6 +1,8 @@
 #!/bin/sh
 DIR=$(dirname $0)
 
+mkdir -p $DIR/work
+
 [ -d $DIR/templates ] || mkdir $DIR/templates
 xmlsec1 --sign --store-references --store-signatures \
         --privkey-pem $DIR/cert/01000003.key,$DIR/cert/01000003.pem \
