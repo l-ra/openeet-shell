@@ -17,7 +17,7 @@ $signatureTemplate=file_get_contents($dir."/templates/template_signature.txt");
 
 #prepare dynamic data
 $data["dat_odesl"]=date("c");
-$data["dat_trzby"]=date("c");
+if (empty($data["dat_trzby"])) $data["dat_trzby"]=date("c");
 
 #generate message uuid 
 $uuidFile=$dir."/work/uuid";
