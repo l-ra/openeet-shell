@@ -21,7 +21,7 @@ if (empty($data["dat_trzby"])) $data["dat_trzby"]=date("c");
 
 #generate message uuid 
 $uuidFile=$dir."/work/uuid";
-system("uuid | tr -d \"\\n\"> $uuidFile");  #uid generated, extra spaces&newlines removed
+system("uuidgen -r | tr -d \"\\n\"> $uuidFile");  #uid generated, extra spaces&newlines removed
 $data["uuid_zpravy"]=file_get_contents($uuidFile);
 
 #compute PKP
