@@ -32,8 +32,8 @@ file_put_contents($pkpInputFile,$pkpInput);
 
 #compute rsassa-pkcs1_5 signature using demo key
 $pkpValueFile=$dir."/work/pkp-value";
-$certFile=$dir."/cert/01000003.pem";
-$keyFile=$dir."/cert/01000003.key";
+$certFile=$dir."/cert/EET_CA1_Playground-CZ1212121218.p12.crt";
+$keyFile=$dir."/cert/EET_CA1_Playground-CZ1212121218.p12.key";
 $signDataCmd= "openssl sha256 -binary $pkpInputFile " #compute hash
              ."| openssl pkeyutl -sign -inkey $keyFile -pkeyopt digest:SHA256 " #apply rsa signature alg to the hash
              ."| base64 -w 0 > $pkpValueFile";  # base64 resulting raw signature 
