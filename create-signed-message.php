@@ -5,10 +5,22 @@ $dir=dirname($_SERVER["SCRIPT_FILENAME"]);
 if ( ! file_exists($dir."/work")) 
 	mkdir($dir."/work");
 
+
+$p12File=$dir."/cert/EET_CA1_Playground-CZ1212121218.p12";
+
+#convert certificate from .p12 to .crt and .key
+if (!file_exists($p12File.".crt") || !file_exists($p12File.".key")) {
+	if (!file_exists($p12File.".pwd")) {
+		echo "ERROR: missing '$p12File.pwd'. Please, create that file with the certificate's password inside.";
+		exit(1);
+	}
+	system("./p12-to-cert-and-key.sh $p12File");
+}
+
+
 #load & parse  "business" data from json file
 $dataJson=file_get_contents($dir."/data/uctenka-data.json");
 $data=json_decode($dataJson, $assoc=true);
-
 
 #load templates
 $requestTemplate=file_get_contents($dir."/templates/template_request.txt");
@@ -30,10 +42,15 @@ $pkpInputFile=$dir."/work/pkp-input";
 $pkpInput=sprintf("%s|%s|%s|%s|%s|%s", $data["dic_popl"],$data["id_provoz"],$data["id_pokl"],$data["porad_cis"],$data["dat_trzby"],$data["celk_trzba"]);
 file_put_contents($pkpInputFile,$pkpInput);
 
+#get certb64
+$certb64File=$dir."/work/certb64";
+system("awk '/-----BEGIN CERTIFICATE-----/{flag=1;next}/-----END CERTIFICATE-----/{exit}flag' $p12File.crt | tr -d '\n' | tr -d '\r' > $certb64File");
+$data["certb64"]=file_get_contents($certb64File);
+
 #compute rsassa-pkcs1_5 signature using demo key
 $pkpValueFile=$dir."/work/pkp-value";
-$certFile=$dir."/cert/EET_CA1_Playground-CZ1212121218.p12.crt";
-$keyFile=$dir."/cert/EET_CA1_Playground-CZ1212121218.p12.key";
+$certFile=$p12File.".crt";
+$keyFile=$p12File.".key";
 $signDataCmd= "openssl sha256 -binary $pkpInputFile " #compute hash
              ."| openssl pkeyutl -sign -inkey $keyFile -pkeyopt digest:SHA256 " #apply rsa signature alg to the hash
              ."| base64 -w 0 > $pkpValueFile";  # base64 resulting raw signature 
