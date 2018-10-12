@@ -1,4 +1,6 @@
 #!/bin/sh
+# The certificate used in this script can be arbitrary, because the signature is overwritten later by create-signed-message.php
+
 DIR=$(dirname $0)
 
 mkdir -p $DIR/work
